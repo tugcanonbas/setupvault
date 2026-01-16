@@ -11,8 +11,8 @@ This guide prepares a `setupvault` formula for Homebrew core and documents the r
 Make sure `Cargo.toml` uses the target version.
 
 ```bash
-git tag -a v0.1.0 -m "setupvault 0.1.0"
-git push origin v0.1.0
+git tag -a 0.1.0 -m "setupvault 0.1.0"
+git push origin 0.1.0
 ```
 
 ## 2) Create the GitHub release
@@ -20,7 +20,7 @@ Create a GitHub release for `v0.1.0`. Use the auto-generated source tarball (Git
 
 Tarball URL format:
 ```
-https://github.com/tugcanonbas/setupvault/archive/refs/tags/v0.1.0.tar.gz
+https://github.com/tugcanonbas/setupvault/archive/refs/tags/0.1.0.tar.gz
 ```
 
 ## 3) Get the SHA256
@@ -28,7 +28,7 @@ Download the tarball and compute the checksum:
 
 ```bash
 curl -L -o setupvault-0.1.0.tar.gz \
-  https://github.com/tugcanonbas/setupvault/archive/refs/tags/v0.1.0.tar.gz
+  https://github.com/tugcanonbas/setupvault/archive/refs/tags/0.1.0.tar.gz
 shasum -a 256 setupvault-0.1.0.tar.gz
 ```
 
