@@ -1,79 +1,104 @@
+
 # SetupVault
 
-SetupVault is a local-first system documentation tool that detects software and configuration changes, then captures the intent behind those changes as Markdown entries. It is designed to reduce setup drift by pairing reproducible commands with human rationale.
+**Local-first system documentation** that captures what changed on your machine and why. SetupVault turns installs, config edits, and defaults into human-readable Markdown entries with reproducible commands.
 
-## Why it exists
-- Machines change every day: packages, apps, config edits, and defaults.
-- Traditional notes drift quickly or never get written.
-- SetupVault records what changed and why, in a format that survives without the app.
+![SetupVault cover](images/setupvault_cover.png)
 
-## Core concepts
-- Vault: the local directory that stores all entries as Markdown with YAML frontmatter.
-- Inbox: detected changes waiting for a rationale and decision.
-- Library: approved entries that represent your documented system state.
-- Snoozed: deferred changes that should resurface later.
-- Manual capture: a first-class flow for entries you want to add yourself.
+## What is SetupVault?
+SetupVault is a CLI + TUI app that detects software and configuration changes across macOS, Linux, and Windows. It collects changes into an Inbox, prompts for rationale, and stores approved entries in a durable Markdown vault.
 
-## Quick start (from source)
-1) Build and run the TUI.
-```bash
-cargo run
-```
-2) Initialize a vault if prompted.
-```bash
-cargo run -- init
-```
-3) Refresh detection from the CLI.
-```bash
-cargo run -- inbox --refresh
-```
-4) Capture a manual entry from the CLI.
-```bash
-cargo run -- capture "jq" --rationale "JSON parsing for debugging scripts" \
-  --entry-type package --source manual --cmd "brew install jq" --tag cli --tag json
-```
+## Problem it solves
+- **Documentation drift**: installs and tweaks happen faster than anyone writes them down.
+- **Lost intent**: commands without rationale are hard to trust later.
+- **Rebuild pain**: new machines become archaeology projects.
 
-Notes:
-- The binary name is `setupvault`, but the CLI help uses the name `sv`.
-- Running with no subcommand launches the TUI.
+## Who it’s for
+- Developers and power users who maintain complex local setups.
+- Teams that want reproducible environments without centralized tooling.
+- Anyone who wants a local-first audit trail of system changes.
 
-## Vault location
-- Default: `~/.setupvault`
-- Override with `SETUPVAULT_PATH` or in the TUI Settings tab.
-- Stored preference: `~/.config/setupvault/config.yaml` (or OS equivalent via `dirs::config_dir`).
+## Features
 
-## What SetupVault detects
-Detectors run per operating system and are intentionally conservative. Each detected change includes a reproduction command.
+### Core functionality
+- **Cross-platform detection** with OS-specific sources.
+- **Inbox workflow** for review, snooze, or ignore.
+- **Manual capture** for anything detectors miss.
+- **Rationale-first** entries stored as Markdown + YAML frontmatter.
+- **Export** entries to a folder for sharing or backup.
 
+### Detectors by OS
 macOS:
-- Homebrew formulae and casks
+- Homebrew (formulae + casks)
 - macOS defaults
-- `/Applications` (app bundle detection)
-- npm global packages, cargo-installed crates, pip packages
-- Dotfiles: `~/.zshrc`, `~/.gitconfig`, `~/.vimrc`
+- `/Applications`
+- npm, cargo, pip
+- Dotfiles (`~/.zshrc`, `~/.gitconfig`, `~/.vimrc`)
 
 Linux:
 - apt (dpkg-query), dnf, yum, pacman
 - flatpak, snap
-- Desktop applications from `.desktop` files
+- `.desktop` applications
 - npm, cargo, pip
 - Dotfiles
 
 Windows:
-- winget (including Store entries), chocolatey, scoop
+- winget (including Microsoft Store), chocolatey, scoop
 - Program Files
 - npm, cargo, pip
 
-## Documentation map
-- `docs/guides/user-manual.md` - end user workflow and keybindings.
-- `docs/guides/contributor-guide.md` - development workflows and standards.
-- `docs/architecture/system-overview.md` - crate responsibilities and data flow.
-- `docs/architecture/data-storage.md` - vault structure and file formats.
-- `docs/architecture/detectors.md` - detectors per OS and sources.
-- `docs/architecture/cli-surface.md` / `docs/architecture/tui-surface.md` - UI contract.
-- `docs/guides/demo-seed.md` - demo vault seeding script.
+### Vault management
+- Default vault: `~/.setupvault`
+- Override with `SETUPVAULT_PATH` or the TUI Settings tab
+- Safe move or switch with confirmation prompts
+- Persistent config at `~/.config/setupvault/config.yaml` (or OS equivalent)
 
-## Repository layout
+## How it works
+1) Detectors scan the system and emit `DetectedChange` items.
+2) The CLI/TUI diffs results against snapshots to find new changes.
+3) New changes enter the Inbox.
+4) Approval requires a rationale and creates a Markdown entry.
+5) Snoozed items stay out of the Vault Health metric.
+
+## Installation
+SetupVault is currently run from source.
+
+### Requirements
+- Rust toolchain with Cargo
+- Python 3 (only for the demo seed script)
+
+### Build and run
+```bash
+cargo run
+```
+
+Run a CLI command:
+```bash
+cargo run -- inbox --refresh
+```
+
+## Usage
+
+### CLI highlights
+- `setupvault init --path <path>`
+- `setupvault inbox --refresh`
+- `setupvault capture "jq" --rationale "JSON parsing" --entry-type package`
+- `setupvault approve <id> --rationale "Needed for debugging"`
+- `setupvault export <path>`
+
+### TUI highlights
+- Tabs: Dashboard, Inbox, Library, Snoozed, Settings
+- Manual capture: press `c`
+- Refresh detectors: `r`
+- Help overlay: `?`
+
+## Demo vault
+Use the demo seed script to generate a realistic demo vault:
+```bash
+python3 scripts/demo_seed.py --vault ~/DemoVault --inbox 12
+```
+
+## Project structure
 ```
 setupvault/
 ├── crates/
@@ -83,10 +108,19 @@ setupvault/
 │   ├── sv-cli         # CLI interface
 │   ├── sv-tui         # terminal UI
 │   └── sv-utils       # shared helpers
-├── scripts/           # demo seed and utility scripts
+├── scripts/           # demo seed and utilities
 ├── docs/              # documentation
 └── src/main.rs        # binary entrypoint
 ```
+
+## Documentation map
+- `docs/guides/user-manual.md` - end user workflow and keybindings
+- `docs/architecture/system-overview.md` - data flow and crate responsibilities
+- `docs/architecture/detectors.md` - detector details by OS
+- `docs/architecture/data-storage.md` - vault layout and file formats
+- `docs/architecture/tui-architecture.md` - UI event loop
+- `docs/architecture/cli-surface.md` - CLI contract
+- `docs/guides/demo-seed.md` - demo vault seeding
 
 ## License
 MIT
