@@ -61,14 +61,21 @@ Windows:
 
 ## Installation
 
-SetupVault is currently run from source.
+### macOS (Homebrew)
 
-### Prerequisites
+```bash
+brew tap tugcanonbas/setupvault
+brew install setupvault
+```
+
+### From source
+
+#### Prerequisites
 
 - Rust toolchain with Cargo
 - Python 3 (only needed for the demo seed script)
 
-### Build and run
+#### Build and run
 
 ```bash
 cargo run

@@ -4,12 +4,19 @@
 SetupVault captures system changes and pairs each entry with a rationale. Entries are stored as Markdown in a local vault, so you can review or edit them without the app.
 
 ## Installation
-SetupVault is currently run from source.
+### macOS (Homebrew)
 
-### Requirements
+```bash
+brew tap tugcanonbas/setupvault
+brew install setupvault
+```
+
+### From source
+
+#### Requirements
 - Rust toolchain with Cargo.
 
-### Build and run
+#### Build and run
 ```bash
 cargo run
 ```
