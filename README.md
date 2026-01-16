@@ -2,7 +2,7 @@
 
 **Local-first system documentation** — capture installs, configuration changes, and defaults with the *why* attached. SetupVault turns system drift into Markdown entries you can trust, review, and replay.
 
-![SetupVault cover](images/setupvault_cover.png)
+![SetupVault cover](https://raw.githubusercontent.com/tugcanonbas/setupvault/main/images/setupvault_cover.png)
 
 ## What is SetupVault?
 
@@ -225,3 +225,5 @@ MIT License
 ## Maintainer
 
 Tuğcan ÖNBAŞ - tgcn@tugcanonbas.com
+
+Website: https://tugcanonbas.com
