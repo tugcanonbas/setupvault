@@ -1,33 +1,38 @@
-
 # SetupVault
 
-**Local-first system documentation** that captures what changed on your machine and why. SetupVault turns installs, config edits, and defaults into human-readable Markdown entries with reproducible commands.
+**Local-first system documentation** — capture installs, configuration changes, and defaults with the *why* attached. SetupVault turns system drift into Markdown entries you can trust, review, and replay.
 
 ![SetupVault cover](images/setupvault_cover.png)
 
 ## What is SetupVault?
-SetupVault is a CLI + TUI app that detects software and configuration changes across macOS, Linux, and Windows. It collects changes into an Inbox, prompts for rationale, and stores approved entries in a durable Markdown vault.
 
-## Problem it solves
-- **Documentation drift**: installs and tweaks happen faster than anyone writes them down.
+SetupVault is a CLI + TUI app that detects software and configuration changes across macOS, Linux, and Windows. It collects changes into an Inbox, prompts for rationale, and stores approved entries as durable Markdown files with YAML frontmatter.
+
+### Problem it solves
+
+- **Documentation drift**: machines evolve faster than human notes.
 - **Lost intent**: commands without rationale are hard to trust later.
 - **Rebuild pain**: new machines become archaeology projects.
+- **Tool sprawl**: installs and defaults scatter across package managers and settings.
 
-## Who it’s for
-- Developers and power users who maintain complex local setups.
-- Teams that want reproducible environments without centralized tooling.
-- Anyone who wants a local-first audit trail of system changes.
+### Who it’s for
+
+- **Developers & power users**: keep your environment reproducible and explainable.
+- **Teams**: share setup intent without central provisioning.
+- **Auditors**: maintain a local-first history of system changes.
 
 ## Features
 
 ### Core functionality
+
 - **Cross-platform detection** with OS-specific sources.
-- **Inbox workflow** for review, snooze, or ignore.
+- **Inbox workflow** to review, snooze, or ignore changes.
+- **Rationale-first entries** stored as Markdown + YAML frontmatter.
 - **Manual capture** for anything detectors miss.
-- **Rationale-first** entries stored as Markdown + YAML frontmatter.
 - **Export** entries to a folder for sharing or backup.
 
-### Detectors by OS
+### Detection sources by OS
+
 macOS:
 - Homebrew (formulae + casks)
 - macOS defaults
@@ -47,39 +52,54 @@ Windows:
 - Program Files
 - npm, cargo, pip
 
-### Vault management
-- Default vault: `~/.setupvault`
-- Override with `SETUPVAULT_PATH` or the TUI Settings tab
-- Safe move or switch with confirmation prompts
-- Persistent config at `~/.config/setupvault/config.yaml` (or OS equivalent)
+### User experience
 
-## How it works
-1) Detectors scan the system and emit `DetectedChange` items.
-2) The CLI/TUI diffs results against snapshots to find new changes.
-3) New changes enter the Inbox.
-4) Approval requires a rationale and creates a Markdown entry.
-5) Snoozed items stay out of the Vault Health metric.
+- **Calm UI**: silent success, clear failures, no spam.
+- **Snooze-first** workflows for deferred review.
+- **Stable sorting** for dashboards and source charts.
+- **Settings tab** for safe vault move/switch with confirmation.
 
 ## Installation
+
 SetupVault is currently run from source.
 
-### Requirements
+### Prerequisites
+
 - Rust toolchain with Cargo
-- Python 3 (only for the demo seed script)
+- Python 3 (only needed for the demo seed script)
 
 ### Build and run
+
 ```bash
 cargo run
 ```
 
 Run a CLI command:
+
 ```bash
 cargo run -- inbox --refresh
 ```
 
-## Usage
+## How to use
+
+### Basic flow
+
+1) **Initialize a vault** if prompted:
+   ```bash
+   setupvault init
+   ```
+2) **Detect changes**:
+   ```bash
+   setupvault inbox --refresh
+   ```
+3) **Review in the TUI**:
+   ```bash
+   setupvault
+   ```
+4) **Approve** changes with a rationale.
 
 ### CLI highlights
+
 - `setupvault init --path <path>`
 - `setupvault inbox --refresh`
 - `setupvault capture "jq" --rationale "JSON parsing" --entry-type package`
@@ -87,18 +107,56 @@ cargo run -- inbox --refresh
 - `setupvault export <path>`
 
 ### TUI highlights
+
 - Tabs: Dashboard, Inbox, Library, Snoozed, Settings
 - Manual capture: press `c`
 - Refresh detectors: `r`
 - Help overlay: `?`
 
+### Vault location
+
+- Default: `~/.setupvault`
+- Override: `SETUPVAULT_PATH` or TUI Settings
+- Persisted preference: `~/.config/setupvault/config.yaml` (or OS equivalent)
+
 ## Demo vault
-Use the demo seed script to generate a realistic demo vault:
+
+Generate a realistic demo vault for screenshots or demos:
+
 ```bash
 python3 scripts/demo_seed.py --vault ~/DemoVault --inbox 12
 ```
 
+## Vault format
+
+Entries are Markdown files with YAML frontmatter:
+
+```markdown
+---
+id: "550e8400-e29b-41d4-a716-446655440000"
+title: "jq"
+type: "package"
+source: "homebrew"
+cmd: "brew install jq"
+system:
+  os: "macos"
+  arch: "arm64"
+detected_at: "2023-10-27T10:00:00Z"
+status: "active"
+tags:
+  - "cli"
+  - "json"
+---
+
+# Rationale
+Useful for parsing JSON responses in daily API debugging scripts.
+
+# Verification
+Run `jq --version` to check installation.
+```
+
 ## Project structure
+
 ```
 setupvault/
 ├── crates/
@@ -113,7 +171,31 @@ setupvault/
 └── src/main.rs        # binary entrypoint
 ```
 
-## Documentation map
+### Key components
+
+- **sv-core**: domain models and validation.
+- **sv-fs**: vault IO, config, snapshots, and state queues.
+- **sv-detectors**: OS-specific detectors and parsing.
+- **sv-cli**: CLI surface; launches the TUI by default.
+- **sv-tui**: terminal UI, inbox review, and settings.
+
+## Limitations
+
+- **Detection is best-effort**: missing binaries mean missing detectors.
+- **No cloud sync**: vaults are local by design.
+- **No auto-remediation**: SetupVault documents changes, it does not reverse them.
+
+## Development
+
+### Useful commands
+
+```bash
+cargo test -p sv-core -p sv-fs -p sv-cli -p sv-tui
+INSTA_UPDATE=always cargo test -p sv-cli -p sv-tui
+```
+
+### Docs
+
 - `docs/guides/user-manual.md` - end user workflow and keybindings
 - `docs/architecture/system-overview.md` - data flow and crate responsibilities
 - `docs/architecture/detectors.md` - detector details by OS
@@ -122,8 +204,24 @@ setupvault/
 - `docs/architecture/cli-surface.md` - CLI contract
 - `docs/guides/demo-seed.md` - demo vault seeding
 
+## Troubleshooting
+
+### Detectors not returning results
+- Ensure the underlying tool exists (e.g., `brew`, `apt`, `winget`).
+- Run `setupvault inbox --refresh` and check for error output.
+
+### TUI keeps asking to initialize
+- Verify `SETUPVAULT_PATH` or update the Settings tab path.
+- Confirm the vault directory contains `entries/` and `.state/`.
+
+### Export not working
+- Confirm the target directory exists and is writable.
+- Use absolute paths to avoid shell expansion issues.
+
 ## License
-MIT
+
+MIT License
 
 ## Maintainer
+
 Tuğcan ÖNBAŞ - tgcn@tugcanonbas.com
