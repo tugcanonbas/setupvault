@@ -13,8 +13,8 @@ class Setupvault < Formula
 
   test do
     vault = testpath/"vault"
-    system "#{bin}/setupvault", "init", "--path", vault
-    assert_predicate vault/"entries", :exist?
-    assert_predicate vault/".state", :exist?
+    system bin/"setupvault", "init", "--path", vault
+    assert_path_exists vault/"entries"
+    assert_path_exists vault/".state"
   end
 end
