@@ -2,7 +2,8 @@
 name = "setupvault"
 version = "0.1.0"
 edition = "2021"
-license = "MIT OR Apache-2.0"
+license = "MIT"
+authors = ["Tuğcan ÖNBAŞ <tgcn@tugcanonbas.com>"]
 
 [dependencies]
 sv-core = { path = "crates/sv-core" }
@@ -25,7 +26,8 @@ members = [
 
 [workspace.package]
 edition = "2021"
-license = "MIT OR Apache-2.0"
+license = "MIT"
+authors = ["Tuğcan ÖNBAŞ <tgcn@tugcanonbas.com>"]
 
 [workspace.dependencies]
 anyhow = "1.0"
