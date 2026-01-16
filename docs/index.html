@@ -196,6 +196,13 @@
         })
         .then((markdown) => {
           contentEl.innerHTML = marked.parse(markdown);
+          const images = contentEl.querySelectorAll("img");
+          images.forEach((img) => {
+            const src = img.getAttribute("src") || "";
+            if (src.includes("setupvault_cover.png")) {
+              img.setAttribute("src", "setupvault_cover.png");
+            }
+          });
           statusEl.remove();
         })
         .catch((error) => {
