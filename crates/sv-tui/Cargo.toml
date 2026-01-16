@@ -1,0 +1,20 @@
+[package]
+name = "sv-tui"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+anyhow = { workspace = true }
+sv-core = { path = "../sv-core" }
+sv-detectors = { path = "../sv-detectors" }
+sv-fs = { path = "../sv-fs" }
+sv-utils = { path = "../sv-utils" }
+ratatui = { workspace = true }
+crossterm = { workspace = true }
+chrono = { workspace = true }
+tokio = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+insta = { workspace = true }

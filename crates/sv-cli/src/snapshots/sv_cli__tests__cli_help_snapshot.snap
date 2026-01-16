@@ -1,0 +1,27 @@
+---
+source: crates/sv-cli/src/lib.rs
+expression: help
+---
+SetupVault CLI
+
+Usage: sv [COMMAND]
+
+Commands:
+  init     Initialize the vault
+  capture  Capture a change and require rationale
+  inbox    List detected changes waiting for action
+  approve  Approve a detected change by id
+  snooze   Snooze a detected change by id
+  ignore   Ignore a detected change by id
+  list     List entries in the vault
+  show     Show a single entry by id
+  search   Search entries by query
+  export   Export entries to a directory
+  help     Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help
+          Print help
+
+  -V, --version
+          Print version

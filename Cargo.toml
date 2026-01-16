@@ -1,0 +1,53 @@
+[package]
+name = "setupvault"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+sv-core = { path = "crates/sv-core" }
+sv-detectors = { path = "crates/sv-detectors" }
+sv-fs = { path = "crates/sv-fs" }
+sv-utils = { path = "crates/sv-utils" }
+sv-cli = { path = "crates/sv-cli" }
+anyhow = { workspace = true }
+
+[workspace]
+resolver = "2"
+members = [
+  "crates/sv-core",
+  "crates/sv-fs",
+  "crates/sv-detectors",
+  "crates/sv-tui",
+  "crates/sv-cli",
+  "crates/sv-utils",
+]
+
+[workspace.package]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.5", features = ["derive"] }
+dirs = "5.0"
+ratatui = "0.26"
+crossterm = "0.27"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+insta = "1.39"
+tempfile = "3.10"
+thiserror = "1.0"
+tokio = { version = "1.36", features = ["rt-multi-thread", "macros"] }
+uuid = { version = "1.7", features = ["serde", "v4"] }
+walkdir = "2.5"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"

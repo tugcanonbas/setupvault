@@ -1,0 +1,13 @@
+[package]
+name = "sv-detectors"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+sv-core = { path = "../sv-core" }
+sv-utils = { path = "../sv-utils" }
+chrono = { workspace = true }
+dirs = { workspace = true }
+tokio = { workspace = true }
+uuid = { workspace = true }
